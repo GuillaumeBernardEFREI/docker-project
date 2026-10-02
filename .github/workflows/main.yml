@@ -26,4 +26,5 @@ jobs:
 
       # Build and test your application
       - name: Build and test with Maven
+        working-directory: simpleapi
         run: mvn clean verify
