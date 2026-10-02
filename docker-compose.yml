@@ -1,0 +1,40 @@
+services:
+
+  database:
+    build: ./database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER:  ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  backend:
+    build: ./simpleapi
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/db
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - backend-network
+      - frontend-network
+    depends_on:
+      - database
+
+  httpd:
+    build: ./httpd
+    ports:
+      - "80:80"
+    networks:
+      - frontend-network
+      
+    depends_on:
+      - backend
+
+networks:
+  backend-network:
+  frontend-network:
+volumes:
+  postgres-data:
