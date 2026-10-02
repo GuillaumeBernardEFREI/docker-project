@@ -55,6 +55,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./httpd
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME}}/tp-devops-httpd:latest
           run: mvn clean verify
