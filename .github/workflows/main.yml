@@ -60,4 +60,3 @@ jobs:
           context: ./httpd
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME}}/tp-devops-httpd:latest
-          run: mvn clean verify
