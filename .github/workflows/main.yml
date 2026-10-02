@@ -22,6 +22,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+          
 
       # Build and test your application
       - name: Build and test with Maven
