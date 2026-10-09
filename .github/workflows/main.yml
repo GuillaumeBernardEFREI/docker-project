@@ -62,3 +62,43 @@ jobs:
           context: ./httpd
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME}}/tp-devops-httpd:latest
+  deploy:
+    name: Deploy application
+    runs-on: ubuntu-24.04
+    needs: build-and-push-docker-image
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Install Docker collection
+        run: |
+          ansible-galaxy collection install community.docker
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy with Ansible
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          ansible-playbook \
+            -i inventories/setup.yml \
+            deploy.yml \
+            -e "ansible_host=${SSH_HOST}" \
+            -e "ansible_ssh_private_key_file=$HOME/.ssh/id_ed25519" \
+            -e "db_password=${DB_PASSWORD}"
