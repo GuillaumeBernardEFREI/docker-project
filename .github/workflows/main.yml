@@ -92,13 +92,5 @@ jobs:
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
 
       - name: Deploy with Ansible
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          ansible-playbook \
-            -i inventories/setup.yml \
-            playbook.yml \
-            -e "ansible_host=${SSH_HOST}" \
-            -e "ansible_ssh_private_key_file=$HOME/.ssh/id_ed25519" \
-            -e "db_password=${DB_PASSWORD}"
+          sudo ansible-playbook -i /my-project/ansible/inventories/setup.yml /my-project/ansible/playbook.yml
