@@ -1,0 +1,13 @@
+- name: Launch backend application
+  community.docker.docker_container:
+    name: backend
+    image: guillaumebernardefrei/tp-devops-simple-api:latest
+    state: started
+    restart_policy: always
+    env:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/db"
+      SPRING_DATASOURCE_USERNAME: "usr"
+      SPRING_DATASOURCE_PASSWORD: "pwd"
+    networks:
+      - name: frontend-network
+      - name: backend-network

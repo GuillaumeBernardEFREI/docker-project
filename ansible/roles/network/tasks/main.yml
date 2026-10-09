@@ -1,0 +1,9 @@
+- name: Create frontend network
+  community.docker.docker_network:
+    name: frontend-network
+    state: present
+
+- name: Create backend network
+  community.docker.docker_network:
+    name: backend-network
+    state: present
