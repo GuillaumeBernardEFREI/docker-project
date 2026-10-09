@@ -1,0 +1,9 @@
+- name: Launch fronttgbrdzer
+  community.docker.docker_container:
+    name: frontend
+    image: guillaumebernardefrei/tp-devops-frontend:latest
+    state: started
+    pull: true
+    restart_policy: always
+    networks:
+      - name: frontend-network
