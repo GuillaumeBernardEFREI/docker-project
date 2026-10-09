@@ -93,4 +93,4 @@ jobs:
 
       - name: Deploy with Ansible
         run: |
-          sudo ansible-playbook -i /my-project/ansible/inventories/setup.yml /my-project/ansible/playbook.yml
+          sudo ansible-playbook -i /ansible/inventories/setup.yml /ansible/playbook.yml
